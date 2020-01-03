@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>secbrain</title>
+  <link rel="stylesheet" href="__STATIC__/css/layui.css">
+</head>
+<body>
+  <!-- 头部 -->
+  {include file="public/header" /}
+  <!-- 主体 -->
+  <div class="layui-row" style="background-color:blanchedalmond;padding: 30px 10% 0 10% ;">
+    <!-- 左侧 -->
+    <div class="layui-col-md9">
+      <ul class="layui-timeline">
+        <li class="layui-timeline-item">
+          <i class="layui-icon layui-timeline-axis"></i>
+          <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title">8月18日</h3>
+            <p>
+              layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。
+              <br>不枉近百个日日夜夜与之为伴。因小而大，因弱而强。
+              <br>无论它能走多远，抑或如何支撑？至少我曾倾注全心，无怨无悔 <i class="layui-icon"></i>
+            </p>
+          </div>
+        </li>
+        <li class="layui-timeline-item">
+          <i class="layui-icon layui-timeline-axis"></i>
+          <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title">8月16日</h3>
+            <p>杜甫的思想核心是儒家的仁政思想，他有<em>“致君尧舜上，再使风俗淳”</em>的宏伟抱负。个人最爱的名篇有：</p>
+            <ul>
+              <li>《登高》</li>
+              <li>《茅屋为秋风所破歌》</li>
+            </ul>
+          </div>
+        </li>
+        <li class="layui-timeline-item">
+          <i class="layui-icon layui-timeline-axis"></i>
+          <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title">8月15日</h3>
+            <p>
+              中国人民抗日战争胜利日
+              <br>常常在想，尽管对这个国家有这样那样的抱怨，但我们的确生在了最好的时代
+              <br>铭记、感恩
+              <br>所有为中华民族浴血奋战的英雄将士
+              <br>永垂不朽
+            </p>
+          </div>
+        </li>
+        <li class="layui-timeline-item">
+          <i class="layui-icon layui-timeline-axis"></i>
+          <div class="layui-timeline-content layui-text">
+            <div class="layui-timeline-title">过去</div>
+          </div>
+        </li>
+      </ul>  
+    </div>
+    <!-- 右侧 -->
+    <div class="layui-col-md3">
+      <button type="button" class="layui-btn"><i class="layui-icon"></i></button>
+      <br>
+      <button ondblclick="alert('双击')" type="button" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">原始按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-radius">默认按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius">百搭按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-warm layui-btn-radius">暖色按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">警告按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">原始按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-radius">默认按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius">百搭按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-warm layui-btn-radius">暖色按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">警告按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">原始按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-radius">默认按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius">百搭按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-warm layui-btn-radius">暖色按钮</button>
+      <button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">警告按钮</button>
+    </div>
+  </div>
+  <!-- 尾部 -->
+  {include file="public/footer" /}
+<script src="__STATIC__/layui.all.js"></script>
+<script>
+//由于模块都一次性加载，因此不用执行 layui.use() 来加载对应模块，直接使用即可：
+  var layer = layui.layer
+  form = layui.form;
+  layer.msg('Hello World');
+</script> 
+</body>
+</html>

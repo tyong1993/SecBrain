@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>secbrain</title>
+  <link rel="stylesheet" href="__STATIC__/css/layui.css">
+</head>
+<body>
+  <!-- 头部 -->
+  <div style="height: 50px; background-color: black;" class="layui-row">
+    
+  </div>
+  <!-- 主体 -->
+  <div class="layui-row">
+    <!-- 左侧 -->
+    <div class="layui-col-md9">
+      <div style="background-color:blanchedalmond;padding: 0 5% 0 10% ;">
+        <!-- 加载编辑器的容器 -->
+        <script id="container" name="content" type="text/plain" style="height:500px;"></script>
+      </div>
+    </div>
+    <!-- 右侧 -->
+    <div class="layui-col-md3">
+      <div style="background-color: rgb(160, 34, 34);">
+        <div>
+          <button type="button" class="layui-btn"><i class="layui-icon"></i></button>
+          <button type="button" class="layui-btn"><i class="layui-icon"></i></button>
+          <br>
+          <button ondblclick="alert('双击')" type="button" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">原始按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-radius">默认按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius">百搭按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-warm layui-btn-radius">暖色按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">警告按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">原始按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-radius">默认按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius">百搭按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-warm layui-btn-radius">暖色按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">警告按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">原始按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-radius">默认按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius">百搭按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-warm layui-btn-radius">暖色按钮</button>
+          <button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">警告按钮</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 尾部 -->
+  <div style="height: 50px; background-color: rgb(34, 27, 27);" class="layui-row">
+    
+  </div>
+<script src="__STATIC__/layui.all.js"></script>
+<script>
+//由于模块都一次性加载，因此不用执行 layui.use() 来加载对应模块，直接使用即可：
+  var layer = layui.layer
+  form = layui.form;
+  layer.msg('Hello World');
+</script> 
+<!-- ueditor -->
+<!-- 配置文件 -->
+<script type="text/javascript" src="__PLUGIN__/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__PLUGIN__/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+  var ue = UE.getEditor('container');
+  //对编辑器的操作最好在编辑器ready之后再做
+  ue.ready(function() {
+      //设置编辑器的内容
+      ue.setContent(ue.execCommand( "getlocaldata" ));
+      //获取html内容，返回: <p>hello</p>
+      var html = ue.getContent();
+      console.log(html);
+      //获取纯文本内容，返回: hello
+      var txt = ue.getContentTxt();
+      console.log(txt);
+  });
+</script>
+</body>
+</html>
