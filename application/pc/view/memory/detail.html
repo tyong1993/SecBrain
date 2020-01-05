@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>secbrain</title>
+  <link rel="stylesheet" href="__STATIC__/css/layui.css">
+</head>
+<body>
+  <!-- 头部 -->
+  {include file="public/header" /}
+  <!-- 主体 -->
+  <div class="layui-row main" style="padding: 30px 300px;">
+    <div class="layui-row">
+      <h2 class="postTitle" style="text-align: center;">
+        {$memory['title']}
+      </h2>
+    </div>
+    <div class="layui-row">
+      <button onclick="deleteMemory({$memory['id']})" style="float: right; margin: 0 10px;" type="button" class="layui-btn layui-btn-normal layui-btn-sm"><i class="layui-icon"></i></button style="float: right;">
+      <button onclick='location.href="{:url('pc/memory/update', 'id='.$memory['id'])}"' style="float: right; margin: 0 10px;" type="button" class="layui-btn layui-btn-normal layui-btn-sm"><i class="layui-icon"></i></button>
+    </div>
+    <hr>
+    <div class="layui-row" style="padding: 0px 100px;">
+      {$memory['describe']}
+    </div>
+    <hr>
+    <div class="layui-row">
+      {$memory['content']|raw}
+    </div>
+  </div>
+  <!-- 尾部 -->
+  {include file="public/footer" /}
+  <script>
+  var $=layui.jquery;
+  var layer=layui.layer;
+  function deleteMemory($id){
+    $.post("{:url('pc/memory/delete')}",{"id":$id},function(res){
+      layer.msg(res.msg);
+      window.location.href = document.referrer;
+    })
+  }
+  </script>
+</body>
+</html>

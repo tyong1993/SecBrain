@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>secbrain</title>
+  <link rel="stylesheet" href="__STATIC__/css/layui.css">
+</head>
+<body>
+  <!-- 头部 -->
+  {include file="public/header" /}
+  <!-- 主体 -->
+  <div class="layui-row main">
+    <!-- 右侧 -->
+    <div class="layui-col-md12" style="padding-left: 30px;">
+      <div style="margin-top: 10px;">
+        <a href="{:url('pc/category/index', 'category_id='.$father_id)}">
+          <button type="button" class="layui-btn layui-btn-sm"><i class="layui-icon"></i></button>
+        </a>
+        <button onclick="addCategory()" type="button" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">添加</button>
+      </div>
+    </div>
+    <!-- 左侧 -->
+    <div class="layui-col-md12">
+      <div style="height: 10px;"></div>
+      <table class="layui-table">
+        <colgroup>
+          <col width="150">
+          <col>
+          <col width="100">
+          <col width="200">
+        </colgroup>
+        <thead>
+          <tr>
+            <!-- <th></th> -->
+            <th>名称</th>
+            <th>描述</th>
+            <th>状态</th>
+            <th>编辑</th>
+          </tr> 
+        </thead>
+        <tbody>
+          {foreach name="categoryList" item="val" }
+            <tr>
+              <!-- <td><input name="category" type="checkbox" value="{$val["id"]}"/></td> -->
+              <td  onclick='location.href="{:url('pc/category/index', 'category_id='.$val['id'])}"'>{$val["name"]}</td>
+              <td  onclick='location.href="{:url('pc/category/index', 'category_id='.$val['id'])}"'>{$val["describe"]|default="这家伙很懒，什么也没留下"}</td>
+              <td>{eq name="$val['status']" value="1"}启用{else/}关闭{/eq}</td>
+              <td>
+                <button onclick="updateCategory({$val['id']})" type="button" class="layui-btn layui-btn-xs layui-btn-radius">修改</button>
+                <button onclick="deleteCategory({$val['id']})" type="button" class="layui-btn layui-btn-xs layui-btn-normal layui-btn-radius">删除</button onclick="update()">
+              </td>
+            </tr>
+          {/foreach}
+        </tbody>
+      </table>  
+    </div>
+  </div>
+  <!-- 尾部 -->
+  {include file="public/footer" /}
+  <script>
+    var layer = layui.layer
+    $=layui.jquery;
+    function updateCategory($id){
+      layer.open({    
+           type: 2,    
+           title: '添加分类',    
+           maxmin: true,    
+           skin: 'layui-layer-lan',    
+           shadeClose: true, //点击遮罩关闭层    
+           area : ['700px' , '400px'],    
+           content:"{:url('pc/category/update','','')}/id/"+$id
+       });
+    }
+    function deleteCategory($id){
+      $.post("{:url('pc/category/delete')}",{"id":$id},function(res){
+        layer.msg(res.msg);
+        location.reload();
+      })
+    }
+    function getCheckedId(){
+      var checked=$("input[name='category']:checked");
+      if(checked.length>1){
+          alert('请选择单条记录!!!');return false;
+      }else if(checked.length<1){
+          alert('请选择一条记录!!!');return false;
+      }else {
+          var id = checked.val();return id;
+      }
+    }
+
+    function addCategory(){
+      layer.open({    
+           type: 2,    
+           title: '添加分类',    
+           maxmin: true,    
+           skin: 'layui-layer-lan',    
+           shadeClose: true, //点击遮罩关闭层    
+           area : ['700px' , '400px'],    
+           content:"{:url('pc/category/add','father_id='.$category_id)}"
+       });
+    }
+  </script>
+</body>
+</html>

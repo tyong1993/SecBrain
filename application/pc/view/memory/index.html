@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>secbrain</title>
+  <link rel="stylesheet" href="__STATIC__/css/layui.css">
+</head>
+<body>
+  <!-- 头部 -->
+  {include file="public/header" /}
+  <!-- 主体 -->
+  <div class="layui-row main">
+    <!-- 左侧 -->
+    <div class="layui-col-md9">
+      <div style="height: 10px;"></div>
+      <ul class="layui-timeline">
+        {foreach name="memoryList" item="val" }
+          <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+              <h3 class="layui-timeline-title">{$val['update_time']}</h3>
+              <p style="cursor: pointer;" onclick='location.href="{:url('pc/memory/detail', 'id='.$val['id'])}"'>《{$val['title']}》</p>
+              <p style="cursor: pointer;" onclick='location.href="{:url('pc/memory/detail', 'id='.$val['id'])}"'>{$val['describe']}</p style="cursor: pointer;" onclick='location.href="{:url('pc/memory/update', 'id='.$val['id'])}"'>
+            </div>
+          </li>
+        {/foreach}
+      </ul>  
+    </div>
+    <!-- 右侧 -->
+    <div class="layui-col-md3"  style="padding-left: 30px;">
+      <div style="height: 10px;"></div>
+      <div>
+        <a href="{:url('pc/memory/index', 'category_id='.$father_id)}">
+          <button type="button" class="layui-btn"><i class="layui-icon"></i></button>
+        </a>
+      </div>
+      <div style="margin-top: 10px;">
+        {foreach name="categoryList" item="val" }
+        <a href="{:url('pc/memory/index', 'category_id='.$val['id'])}">
+          <button ondblclick="alert('双击')" type="button" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">{$val['name']}</button>
+        </a>
+        {/foreach}
+      </div>
+    </div>
+  </div>
+  <!-- 尾部 -->
+  {include file="public/footer" /}
+</body>
+</html>

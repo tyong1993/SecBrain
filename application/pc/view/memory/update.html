@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>secbrain</title>
+  <link rel="stylesheet" href="__STATIC__/css/layui.css">
+</head>
+<body>
+  <!-- 头部 -->
+  {include file="public/header" /}
+  <!-- 主体 -->
+  <div class="layui-row main">
+    <!-- 左侧 -->
+    <div class="layui-col-md9">
+      <div>
+        <form class="layui-form" lay-filter="memory" action="" method="POST">
+          <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+              <input type="text" name="title" value="{$memory['title']}" lay-verify="required" placeholder="请输入标题" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">简介</label>
+            <div class="layui-input-block">
+              <textarea placeholder="请输入内容" name="describe" class="layui-textarea">{$memory['describe']}</textarea>
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+              <!-- 加载编辑器的容器 -->
+              <textarea style="height:500px;" name='content' id='container'>{$memory['content']}</textarea style="height:500px;">
+            </div>
+          </div>
+          <input type="text" name="categorys" style="display: none;">
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button type="submit" class="layui-btn" lay-submit>立即提交</button>
+              <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- 右侧 -->
+    <div class="layui-col-md3" style="padding-left: 30px;">
+      <div>
+        <button onclick="getCategorys(-1)" type="button" class="layui-btn"><i class="layui-icon"></i></button>
+        <a href="{:url('pc/category/index')}">
+          <button type="button" class="layui-btn"><i class="layui-icon"></i></button>
+        </a>
+      </div>
+      <div style="margin-top: 10px;">可选分类<hr class="layui-bg-red"></div>
+      <div style="margin-top: 10px;" id="category">
+
+      </div>
+      <div style="margin-top: 10px;">已选分类<hr class="layui-bg-red"></div style="margin-top: 10px;">
+      <div style="margin-top: 10px;" id="memory_category">
+        {foreach name="memory_categorys" item="val" }
+        <button data-id="{$val['id']}" type="button" ondblclick="deleteMemoryCategory(this)" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">{$val['name']}</button>
+        {/foreach}
+      </div>
+    </div>
+  </div>
+  <!-- 尾部 -->
+  {include file="public/footer" /}
+<!-- ueditor -->
+<!-- 配置文件 -->
+<script type="text/javascript" src="__PLUGIN__/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__PLUGIN__/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+  var ue = UE.getEditor('container');
+  //对编辑器的操作最好在编辑器ready之后再做
+  // ue.ready(function() {
+  //   ue.setContent("{$memory['content']}");
+  // });
+  var form=layui.form;
+  var $=layui.jquery;
+  var layer=layui.layer;
+  form.on('submit(memory)', function(data){
+      var memory_category=document.getElementById("memory_category");
+      var tags=memory_category.getElementsByTagName("button");
+      
+      var categorys="";
+      for(var i=0;i<tags.length;i++){
+        categorys+=tags[i].getAttribute("data-id")+",";
+      }
+      if(categorys.length>0){
+        categorys=categorys.substring(0,categorys.length-1)
+      }
+      form.val("memory",{"categorys":categorys})
+      return true;
+  });
+//获取可选分类
+$return_id=null;
+function getCategorys($father_id=null){
+  if($father_id == "-1"){
+    $father_id=$return_id;
+  }
+  $.post("{:url('pc/category/index')}",{"category_id":$father_id},function(res){
+      if(res.flag != "success"){
+        layer.msg(res.msg);
+      }else{
+        var categoryList=res.data.categoryList;
+        $buttons="";
+        for(var i=0;i<categoryList.length;i++){
+          $button='<button type="button" ondblclick="getCategoryParents('+categoryList[i].id+')" onclick="clickHander('+categoryList[i].id+')" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">'+categoryList[i].name+'</button>';
+          $buttons+=$button;
+        }
+        $("#category").empty();
+        $("#category").append($buttons);
+        $return_id=res.data.father_id
+      }
+  })
+}
+getCategorys();
+//单双击共存实现
+var timeFunName = null; 
+function clickHander($param){
+  clearTimeout(timeFunName);
+  timeFunName = setTimeout(function(){
+    getCategorys($param);
+  },300)
+}
+function getCategoryParents($category_id){
+  clearTimeout(timeFunName);
+  $.post("{:url('pc/category/getCategoryParents')}",{"category_id":$category_id},function(res){
+      if(res.flag != "success"){
+        layer.msg(res.msg);
+      }else{
+        var categoryList=res.data;
+        $buttons="";
+        for(var i=0;i<categoryList.length;i++){
+          $button='<button data-id="'+categoryList[i].id+'" type="button" ondblclick="deleteMemoryCategory(this)" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">'+categoryList[i].name+'</button>';
+          $buttons+=$button;
+        }
+        $("#memory_category").append($buttons);
+      }
+  })
+}
+function deleteMemoryCategory(obj){
+  obj.remove();
+}
+
+</script>
+</body>
+</html>

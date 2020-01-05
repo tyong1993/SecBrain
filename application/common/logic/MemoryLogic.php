@@ -1,0 +1,151 @@
+<?php
+namespace app\common\logic;
+
+use Think\Db;
+use app\common\base\BaseLogic;
+class MemoryLogic extends BaseLogic implements MemoryLogicInf
+{
+    
+    public function addMemory()
+    {
+        //title必填
+        if(empty($this->request->param("title"))){
+            return self::bad("标题不能为空");
+        }
+        Db::startTrans();
+        //core
+        $res=$this->addCore(app("app\common\logic\CoreLogicInf"));
+        if($res["flag"] === false){
+            Db::rollback();
+            return self::bad($res);
+        }
+        //memory
+        $memory=[
+            'core_id'=>$res['data'],
+            'master_id'=>MASTER_ID,
+            'title'=>$this->request->param("title"),
+            'describe'=>$this->request->param("describe"),
+            'content'=>$this->request->param("content"),
+        ];
+        $memory_id=Db::table("memory")->insertGetId($memory);
+        //tag
+        $this->updateMemoryTag($memory_id,$this->request->param("categorys"));
+        Db::commit();
+        return $memory_id;
+    }
+    public function deleteMemory($id)
+    {
+        $core_id=Db::table("memory")->where(["id"=>$id])->value("core_id");
+        Db::startTrans();
+        $this->deleteCore($core_id,app("app\common\logic\CoreLogicInf"));
+        //tag
+        $this->updateMemoryTag($id,'');
+        Db::commit();
+        return self::well();
+    }
+    public function updateMemory($id)
+    {
+        $core_id=Db::table("memory")->where(["id"=>$id])->value("core_id");
+        Db::startTrans();
+        $this->updateCore($core_id,app("app\common\logic\CoreLogicInf"));
+        //memory
+        $memory=[
+            'id'=>$id,
+            'title'=>$this->request->param("title"),
+            'describe'=>$this->request->param("describe"),
+            'content'=>$this->request->param("content"),
+        ];
+        Db::table("memory")->update($memory);
+        //tag
+        $this->updateMemoryTag($id,$this->request->param("categorys"));
+        Db::commit();
+        return self::well();
+    }
+    public function selectMemoryList()
+    {
+        $category_id=$this->request->param("category_id");
+        $where=self::BASE_SELECT_WHERE;
+        if(!empty($category_id)){
+            $memory_ids=Db::table("memory_tag")->where(["category_id"=>$category_id])->column("memory_id");
+            $memory_ids[]=0;
+            $where["m.id"]=$memory_ids;
+        }
+        
+        $res=Db::table("memory")
+        ->alias("m")
+        ->field("m.id,m.title,m.describe,c.update_time")
+        ->leftJoin("core c","c.id = m.core_id")
+        ->where($where)
+        ->order("id desc")
+        ->select();
+        foreach($res as &$val){
+            $val['update_time']=date("Y年m月d日 H:i");
+            // $val['describe']=mb_substr($val['describe'],0,10)."......";
+        }
+        return $res;
+    }
+    public function selectMemoryone($id)
+    {
+        $where=self::BASE_SELECT_WHERE;
+        $where["m.id"]=$id;
+        $res=Db::table("memory")
+        ->alias("m")
+        ->field("m.*,c.update_time")
+        ->leftJoin("core c","c.id = m.core_id")
+        ->where($where)
+        ->find();
+        return $res;
+    }
+    protected function addCore(CoreLogicInf $coreLogic)
+    {
+        return $coreLogic->addCore();
+    }
+    protected function deleteCore($core_id,CoreLogicInf $coreLogic)
+    {
+        return $coreLogic->deleteCore($core_id);
+    }
+    protected function updateCore($core_id,CoreLogicInf $coreLogic)
+    {
+        return $coreLogic->updateCore($core_id);
+    }
+    protected function updateMemoryTag($memory_id,$category_ids)
+    {
+        $need_add=[];
+        $need_delete=[];
+        $exist_category_ids=Db::table("memory_tag")->where(["memory_id"=>$memory_id])->column('category_id')?:[];
+        $now_category_ids=$category_ids?explode(",",$category_ids):[];
+        $exist_category_ids=array_unique($exist_category_ids);
+        $now_category_ids=array_unique($now_category_ids);
+        if(empty($exist_category_ids)){
+            $need_add=$now_category_ids;
+        }
+        if(empty($now_category_ids)){
+            $need_delete=$exist_category_ids;
+        }
+        if(!empty($exist_category_ids) && !empty($now_category_ids)){
+            //需要新增的
+            foreach($now_category_ids as $val){
+                if(!in_array($val,$exist_category_ids)){
+                    $need_add[]=$val;
+                }
+            }
+            //需要删除的
+            foreach($exist_category_ids as $val){
+                if(!in_array($val,$now_category_ids)){
+                    $need_delete[]=$val;
+                }
+            }
+        }
+        if(!empty($need_add)){
+            $data=[];
+            foreach($need_add as $val){
+                $data[]=["memory_id"=>$memory_id,"category_id"=>$val];
+            }
+            Db::table("memory_tag")->insertAll($data);
+        }
+        if(!empty($need_delete)){
+            Db::table("memory_tag")->where(["category_id"=>$need_delete,"memory_id"=>$memory_id])->delete();
+        }
+        return true;
+    }
+}

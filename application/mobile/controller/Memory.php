@@ -6,6 +6,7 @@ class Memory extends Controller
 {
     public function list()
     {
+        
         return $this->fetch();
     }
     public function detail()
