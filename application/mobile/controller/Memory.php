@@ -1,28 +1,59 @@
 <?php
 namespace app\mobile\controller;
 
-use think\Controller;
-class Memory extends Controller
+use app\common\base\BaseController;
+use app\common\logic\MemoryLogicInf;
+use app\common\logic\CategoryLogicInf;
+class Memory extends BaseController
 {
-    public function list()
+
+    public function index(MemoryLogicInf $MemoryLogic,CategoryLogicInf $categoryLogic)
     {
-        
+        $memoryList=$MemoryLogic->selectMemoryList();
+        $categoryList=$categoryLogic->selectCategoryList();
+        $this->assign("memoryList",$memoryList);
+        $this->assign("categoryList",$categoryList);
+        $father_id=null;
+        if(!empty($this->request->param("category_id"))){
+            $father_id=db("category")->where(["id"=>$this->request->param("category_id")])->value("father_id");
+        }
+        $this->assign("father_id",$father_id);
         return $this->fetch();
     }
-    public function detail()
+    public function detail(MemoryLogicInf $MemoryLogic,CategoryLogicInf $categoryLogic)
     {
+        $memory=$MemoryLogic->selectMemoryone($this->request->param("id"));
+        $categoryList=$categoryLogic->selectCategoryList();
+        $this->assign("categoryList",$categoryList);
+        $this->assign("memory",$memory);
         return $this->fetch();
     }
-    public function add()
+    public function add(MemoryLogicInf $MemoryLogic)
     {
-        return $this->fetch();
+        if($this->request->isGet()){
+            return $this->fetch();
+        }
+        $MemoryLogic->addMemory();
+        return $this->success("保存成功");
     }
-    public function delete()
+    public function delete(MemoryLogicInf $MemoryLogic)
     {
-        return $this->fetch();
+        $MemoryLogic->deleteMemory($this->request->param("id"));
+        return self::well();
     }
-    public function update()
+    public function update(MemoryLogicInf $MemoryLogic,CategoryLogicInf $categoryLogic)
     {
-        return $this->fetch();
+        if($this->request->isGet()){
+            $memory=$MemoryLogic->selectMemoryone($this->request->param("id"));
+            $memory_category_ids=db("memory_tag")->where(["memory_id"=>$this->request->param("id")])->column("category_id");
+            $memory_category_ids[]=0;
+            $where['cg.id']=$memory_category_ids;
+            $memory_categorys=$categoryLogic->selectCategoryList($where);
+            $this->assign("memory",$memory);
+            $this->assign("memory_categorys",$memory_categorys);
+            return $this->fetch();
+        }
+        $MemoryLogic->updateMemory($this->request->param("id"));
+        return $this->success("更新成功");
     }
 }

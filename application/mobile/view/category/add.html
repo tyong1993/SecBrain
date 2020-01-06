@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>secbrain</title>
+  <link rel="stylesheet" href="__STATIC__/css/layui.css">
+</head>
+<body>
+  <!-- 主体 -->
+  <div class="layui-row">
+    <div style="background-color:blanchedalmond;padding: 10px 5% 0 10% ;min-height: 100vh">
+      <form class="layui-form" lay-filter="category" action="" method="POST">
+        <div class="layui-form-item">
+          <label class="layui-form-label">名称</label>
+          <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" placeholder="请输入分类名称" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+          <label class="layui-form-label">描述</label>
+          <div class="layui-input-block">
+            <textarea placeholder="请输入描述内容" name="describe" class="layui-textarea"></textarea>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">状态</label>
+          <div class="layui-input-block">
+            <input type="radio" name="status" value="1" title="启用" checked>
+            <input type="radio" name="status" value="0" title="关闭">
+          </div>
+        </div>
+        <input type="text" name="father_id" style="display: none;" value="{$father_id}">
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit>立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="__STATIC__/layui.all.js"></script>
+<script type="text/javascript">
+  var form=layui.form;
+  form.on('submit(category)', function(data){
+      return true;
+  });
+
+</script>
+</body>
+</html>

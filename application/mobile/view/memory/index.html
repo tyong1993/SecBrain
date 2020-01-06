@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>secbrain</title>
+  <link rel="stylesheet" href="__STATIC__/css/layui.css">
+</head>
+<body>
+  <!-- 头部 -->
+  {include file="public/header" /}
+  <!-- 主体 -->
+  <div class="layui-row main" style="padding: 30px 10% 0 10% ;margin-bottom: 50px;">
+    <div class="layui-col-xs12">
+      <div>
+        <ul class="layui-timeline">
+          {foreach name="memoryList" item="val" }
+          <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+              <h3 class="layui-timeline-title">{$val['update_time']}</h3>
+              <p style="cursor: pointer;" onclick='location.href="{:url('mobile/memory/detail', 'id='.$val['id'])}"'>《{$val['title']}》</p>
+              <p style="cursor: pointer;" onclick='location.href="{:url('mobile/memory/detail', 'id='.$val['id'])}"'>{$val['describe']}</p>
+            </div>
+          </li>
+        {/foreach}
+        </ul>  
+      </div>
+    </div>
+  </div>
+  <!-- 尾部 -->
+  {include file="public/footer" /}
+</body>
+</html>

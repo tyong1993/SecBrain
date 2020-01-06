@@ -1,0 +1,114 @@
+<!-- position:fixed;bottom:0px; -->
+<div style="z-index: 999;height: 50px; background-color: rgb(34, 27, 27);position:fixed;bottom:0px;width: 100%;
+padding: 0 10px 0 10px;" class="layui-row">
+    <div class="layui-col-xs4">
+        <button style="margin:5px 0 0 12%;" onclick='location.href="{:url('mobile/memory/index')}"' class="layui-btn layui-btn-normal">getter</button>
+    </div>
+    <div class="layui-col-xs4">
+        <button style="margin:5px 0 0 12%;" onclick="alertTags()" class="layui-btn layui-btn-normal">tag</button>
+    </div>
+    <div class="layui-col-xs4">
+        <button style="margin:5px 0 0 12%;" onclick='location.href="{:url('mobile/memory/add')}"' class="layui-btn layui-btn-normal">setter</button>
+    </div>
+</div>
+<!-- tag -->
+<div style="display: none; padding: 30px 30px;" id="tag">
+    <!-- 右侧 -->
+    <div class="layui-col-md3" style="padding-left: 30px;">
+        <div>
+          <button onclick="getCategorys(-1)" type="button" class="layui-btn"><i class="layui-icon"></i></button>
+          <a href="{:url('mobile/category/index')}">
+            <button type="button" class="layui-btn"><i class="layui-icon"></i></button>
+          </a>
+        </div>
+        <div style="margin-top: 10px;">可选分类<hr class="layui-bg-red"></div>
+        <div style="margin-top: 10px;" id="category">
+  
+        </div>
+        <div style="margin-top: 10px;">已选分类<hr class="layui-bg-red"></div style="margin-top: 10px;">
+        <div style="margin-top: 10px;" id="memory_category">
+            {if isset($memory_categorys)}
+                {foreach name="memory_categorys" item="val" }
+                    <button data-id="{$val['id']}" type="button" ondblclick="deleteMemoryCategory(this)" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">{$val['name']}</button>
+                {/foreach}
+            {/if}
+        </div>
+      </div>
+</div>
+<script src="__STATIC__/layui.all.js"></script>
+<script>
+//由于模块都一次性加载，因此不用执行 layui.use() 来加载对应模块，直接使用即可：
+    var form=layui.form;
+    var $=layui.jquery;
+    var layer=layui.layer;
+    function alertTags(){
+        layer.open({
+        title:'标签',
+        type: 1, 
+        offset: 'b',
+        // maxmin: true,    //最大化最小化
+        skin: 'layui-layer-lan',    
+        shadeClose: true, //点击遮罩关闭层    
+        area : ['100%' , 'auto'],  
+        content: $("#tag")
+        });
+    }
+  //获取可选分类
+    $return_id=null;
+    function getCategorys($father_id=null){
+    if($father_id == "-1"){
+        $father_id=$return_id;
+    }
+    $.post("{:url('mobile/category/index')}",{"category_id":$father_id},function(res){
+        if(res.flag != "success"){
+            layer.msg(res.msg);
+        }else{
+            var categoryList=res.data.categoryList;
+            $buttons="";
+            for(var i=0;i<categoryList.length;i++){
+            $button='<button type="button" ontouchend="clickHander('+categoryList[i].id+')" ontouchstart="touchLongHander('+categoryList[i].id+')" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">'+categoryList[i].name+'</button>';
+            $buttons+=$button;
+            }
+            $("#category").empty();
+            $("#category").append($buttons);
+            $return_id=res.data.father_id
+        }
+    })
+    }
+    getCategorys();
+    //点击与长按实现
+    var timeOutEvent=null;
+    var is_out=null;
+    function clickHander($param){
+        clearTimeout(timeOutEvent);    
+        if (is_out != 1) {    
+            getCategorys($param);
+        }    
+        timeOutEvent=null;
+        is_out=null;
+    }
+    function touchLongHander($param){
+        timeOutEvent = setTimeout(function() {    
+            is_out=1;
+            getCategoryParents($param);
+        }, 400);   
+    }
+    function getCategoryParents($category_id){
+    $.post("{:url('mobile/category/getCategoryParents')}",{"category_id":$category_id},function(res){
+        if(res.flag != "success"){
+            layer.msg(res.msg);
+        }else{
+            var categoryList=res.data;
+            $buttons="";
+            for(var i=0;i<categoryList.length;i++){
+            $button='<button data-id="'+categoryList[i].id+'" type="button" onclick="deleteMemoryCategory(this)" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">'+categoryList[i].name+'</button>';
+            $buttons+=$button;
+            }
+            $("#memory_category").append($buttons);
+        }
+    })
+    }
+    function deleteMemoryCategory(obj){
+    obj.remove();
+    }
+</script> 
