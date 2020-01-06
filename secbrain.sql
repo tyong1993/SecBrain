@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.53)
-# Date: 2020-01-05 21:41:29
+# Date: 2020-01-06 18:05:33
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
@@ -8,6 +8,7 @@
 # Structure for table "core"
 #
 
+DROP TABLE IF EXISTS `core`;
 CREATE TABLE `core` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `create_time` int(11) unsigned DEFAULT NULL,
@@ -18,22 +19,37 @@ CREATE TABLE `core` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='data base';
 
 #
+# Data for table "core"
+#
+
+INSERT INTO `core` VALUES (2,1,1,b'0',NULL);
+
+#
 # Structure for table "master"
 #
 
+DROP TABLE IF EXISTS `master`;
 CREATE TABLE `master` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `core_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `master_core` (`core_id`),
   CONSTRAINT `master_core` FOREIGN KEY (`core_id`) REFERENCES `core` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='主人';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='主人';
+
+#
+# Data for table "master"
+#
+
+INSERT INTO `master` VALUES (1,2,'tyong','907efaa1d9fe69496147fafa257235d0');
 
 #
 # Structure for table "category"
 #
 
+DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `core_id` int(11) DEFAULT NULL,
@@ -51,9 +67,15 @@ CREATE TABLE `category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分类';
 
 #
+# Data for table "category"
+#
+
+
+#
 # Structure for table "memory"
 #
 
+DROP TABLE IF EXISTS `memory`;
 CREATE TABLE `memory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `core_id` int(11) DEFAULT NULL,
@@ -69,9 +91,15 @@ CREATE TABLE `memory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='主体内容';
 
 #
+# Data for table "memory"
+#
+
+
+#
 # Structure for table "memory_tag"
 #
 
+DROP TABLE IF EXISTS `memory_tag`;
 CREATE TABLE `memory_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `memory_id` int(11) DEFAULT NULL,
@@ -82,3 +110,8 @@ CREATE TABLE `memory_tag` (
   CONSTRAINT `tag_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
   CONSTRAINT `tag_memory` FOREIGN KEY (`memory_id`) REFERENCES `memory` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+#
+# Data for table "memory_tag"
+#
+

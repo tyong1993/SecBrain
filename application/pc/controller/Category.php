@@ -3,7 +3,7 @@ namespace app\pc\controller;
 
 use app\common\base\BaseController;
 use app\common\logic\CategoryLogicInf;
-class category extends BaseController
+class Category extends BaseController
 {
 
     public function index(CategoryLogicInf $categoryLogic)
