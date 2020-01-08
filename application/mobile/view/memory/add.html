@@ -21,14 +21,13 @@
       <div class="layui-form-item layui-form-text">
         <!-- <label class="layui-form-label">简介</label> -->
         <div class="layui-input-block" style="margin-left: 0px;">
-          <textarea placeholder="请输入内容" name="describe" class="layui-textarea"></textarea>
+          <textarea placeholder="请输入简介" name="describe" class="layui-textarea"></textarea>
         </div>
       </div>
       <div class="layui-form-item layui-form-text">
-        <!-- <label class="layui-form-label">内容</label> -->
+        <!-- <label class="layui-form-label">简介</label> -->
         <div class="layui-input-block" style="margin-left: 0px;">
-          <!-- 加载编辑器的容器 -->
-          <textarea style="height:500px;" name='content' id='container'></textarea style="height:500px;">
+          <textarea style="min-height: 50vh;" placeholder="请输入内容" name="content" class="layui-textarea"></textarea>
         </div>
       </div>
       <input type="text" name="categorys" style="display: none;">
@@ -42,19 +41,7 @@
   </div>
   <!-- 尾部 -->
   {include file="public/footer_1" /}
-<!-- ueditor -->
-<!-- 配置文件 -->
-<script type="text/javascript" src="__PLUGIN__/ueditor/ueditor.config.js"></script>
-<!-- 编辑器源码文件 -->
-<script type="text/javascript" src="__PLUGIN__/ueditor/ueditor.all.js"></script>
-<!-- 实例化编辑器 -->
 <script type="text/javascript">
-  var ue = UE.getEditor('container');
-  //对编辑器的操作最好在编辑器ready之后再做
-  ue.ready(function() {
-      //设置编辑器的内容
-      ue.setContent(ue.execCommand( "getlocaldata" ));
-  });
   form.on('submit(memory)', function(data){
       var memory_category=document.getElementById("memory_category");
       var tags=memory_category.getElementsByTagName("button");
