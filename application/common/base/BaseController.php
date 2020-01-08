@@ -6,11 +6,10 @@ class BaseController extends Controller
 {
     protected function initialize()
     {
-        
-        if(!empty(session('master'))){
-            define("MASTER_ID",1);
+        $master=session('master');
+        if(!empty($master)){
+            define("MASTER_ID",$master['id']);
         }else{
-            
             if($this->request->action() != "login"){
                 $module=$this->request->module();
                 redirect('/'.$module.'/Login/login')->send();die;

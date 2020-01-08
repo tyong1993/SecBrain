@@ -51,10 +51,10 @@
 <script type="text/javascript">
   var ue = UE.getEditor('container');
   //对编辑器的操作最好在编辑器ready之后再做
-  ue.ready(function() {
-      //设置编辑器的内容
-      ue.setContent(ue.execCommand( "getlocaldata" ));
-  });
+  // ue.ready(function() {
+  //     //设置编辑器的内容
+  //     ue.setContent(ue.execCommand( "getlocaldata" ));
+  // });
   form.on('submit(memory)', function(data){
       var memory_category=document.getElementById("memory_category");
       var tags=memory_category.getElementsByTagName("button");
