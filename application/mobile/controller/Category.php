@@ -14,6 +14,7 @@ class Category extends BaseController
             $father_id=db("category")->where(["id"=>$this->request->param("category_id")])->value("father_id");
         }
         if($this->request->isAjax()){
+            $categoryList=$categoryLogic->selectCategoryList();
             return self::well(
                 [
                     "categoryList"=>$categoryList,
@@ -22,6 +23,7 @@ class Category extends BaseController
                 ]
                 );
         }
+        $categoryList=$categoryLogic->selectCategoryList(null,$is_admin=true);
         $this->assign("categoryList",$categoryList);
         $this->assign("father_id",$father_id);
         $this->assign("category_id",$this->request->param("category_id"));
@@ -41,7 +43,7 @@ class Category extends BaseController
             $this->assign("father_id",$this->request->param("father_id"));
             return $this->fetch();
         }
-        $res=$categoryLogic->addCategory();
+        $res=$categoryLogic->addCategory(app("app\common\logic\CoreLogicInf"));
         if($res['flag'] === false){
             return $this->error($res['msg']);
         }
@@ -49,7 +51,7 @@ class Category extends BaseController
     }
     public function delete(CategoryLogicInf $categoryLogic)
     {
-        $categoryLogic->deleteCategory($this->request->param("id"));
+        $categoryLogic->deleteCategory($this->request->param("id"),app("app\common\logic\CoreLogicInf"));
         return self::well();
     }
     public function update(CategoryLogicInf $categoryLogic)
@@ -59,7 +61,7 @@ class Category extends BaseController
             $this->assign("category",$category);
             return $this->fetch();
         }
-        $categoryLogic->updateCategory($this->request->param("id"));
+        $categoryLogic->updateCategory($this->request->param("id"),app("app\common\logic\CoreLogicInf"));
         return $this->success("更新成功");
     }
 }

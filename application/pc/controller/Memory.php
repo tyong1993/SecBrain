@@ -31,12 +31,12 @@ class Memory extends BaseController
         if($this->request->isGet()){
             return $this->fetch();
         }
-        $MemoryLogic->addMemory();
+        $MemoryLogic->addMemory(app("app\common\logic\CoreLogicInf"));
         return $this->success("保存成功");
     }
     public function delete(MemoryLogicInf $MemoryLogic)
     {
-        $MemoryLogic->deleteMemory($this->request->param("id"));
+        $MemoryLogic->deleteMemory($this->request->param("id"),app("app\common\logic\CoreLogicInf"));
         return self::well();
     }
     public function update(MemoryLogicInf $MemoryLogic,CategoryLogicInf $categoryLogic)
@@ -51,7 +51,7 @@ class Memory extends BaseController
             $this->assign("memory_categorys",$memory_categorys);
             return $this->fetch();
         }
-        $MemoryLogic->updateMemory($this->request->param("id"));
+        $MemoryLogic->updateMemory($this->request->param("id"),app("app\common\logic\CoreLogicInf"));
         return $this->success("更新成功");
     }
 }

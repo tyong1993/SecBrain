@@ -14,4 +14,5 @@ return [
     'app\common\logic\MemoryLogicInf'      => app\common\logic\MemoryLogic::class,
     'app\common\logic\CategoryLogicInf'      => app\common\logic\CategoryLogic::class,
     'app\common\logic\CoreLogicInf'      => app\common\logic\CoreLogic::class,
+    'app\common\logic\LoginLogicInf'      => app\common\logic\LoginLogic::class,
 ];

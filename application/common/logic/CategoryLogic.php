@@ -1,11 +1,12 @@
 <?php
 namespace app\common\logic;
 
+use app\common\logic\CoreLogicInf;
 use Think\Db;
 use app\common\base\BaseLogic;
 class CategoryLogic extends BaseLogic implements CategoryLogicInf
 {
-    public function addCategory()
+    public function addCategory(CoreLogicInf $coreLogicInf)
     {
         //title必填
         if(empty($this->request->param("name"))){
@@ -13,7 +14,7 @@ class CategoryLogic extends BaseLogic implements CategoryLogicInf
         }
         Db::startTrans();
         //core
-        $res=$this->addCore(app("app\common\logic\CoreLogicInf"));
+        $res=$coreLogicInf->addCore();
         if($res["flag"] === false){
             Db::rollback();
             return self::bad($res);
@@ -40,19 +41,19 @@ class CategoryLogic extends BaseLogic implements CategoryLogicInf
         Db::commit();
         return self::well($category_id);
     }
-    public function deleteCategory($id){
+    public function deleteCategory($id,CoreLogicInf $coreLogicInf){
         $core_id=Db::table("category")->where(["id"=>$id])->value("core_id");
         Db::startTrans();
-        $this->deleteCore($core_id,app("app\common\logic\CoreLogicInf"));
+        $coreLogicInf->deleteCore($core_id);
         //tag
         Db::table("memory_tag")->where(["category_id"=>$id])->delete();
         Db::commit();
         return self::well();
     }
-    public function updateCategory($id){
+    public function updateCategory($id,CoreLogicInf $coreLogicInf){
         $core_id=Db::table("category")->where(["id"=>$id])->value("core_id");
         Db::startTrans();
-        $this->updateCore($core_id,app("app\common\logic\CoreLogicInf"));
+        $coreLogicInf->updateCore($core_id);
         //category
         $category=[
             'id'=>$id,
@@ -64,9 +65,11 @@ class CategoryLogic extends BaseLogic implements CategoryLogicInf
         Db::commit();
         return self::well();
     }
-    public function selectCategoryList($wheres=null){
-        $where=self::BASE_SELECT_WHERE;
-        $where["status"]=1;
+    public function selectCategoryList($wheres=null,$is_admin=false){
+        $where=$this->base_select_where;
+        if($is_admin == false){
+            $where["status"]=1;
+        }
         if($wheres == null){
             $category_id=$this->request->param("category_id");
             if(!empty($category_id)){
@@ -82,7 +85,7 @@ class CategoryLogic extends BaseLogic implements CategoryLogicInf
     }
     public function getCategoryParents($id, $is_get_myself = true)
     {
-        $where=self::BASE_SELECT_WHERE;
+        $where=$this->base_select_where;
         $where["status"]=1;
         $category_ids=[0];
         $father_id=db("category")->where(['id'=>$id])->value("father_id");
@@ -108,16 +111,5 @@ class CategoryLogic extends BaseLogic implements CategoryLogicInf
         ->select();
         return $res;
     }
-    protected function addCore(CoreLogicInf $coreLogic)
-    {
-        return $coreLogic->addCore();
-    }
-    protected function deleteCore($core_id,CoreLogicInf $coreLogic)
-    {
-        return $coreLogic->deleteCore($core_id);
-    }
-    protected function updateCore($core_id,CoreLogicInf $coreLogic)
-    {
-        return $coreLogic->updateCore($core_id);
-    }
+
 }

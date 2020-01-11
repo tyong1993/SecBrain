@@ -7,6 +7,12 @@ class BaseController extends Controller
     protected function initialize()
     {
         $master=session('master');
+        if(empty($master)){
+            $remember_me=cookie('remember_me');
+            if($remember_me){
+                $master=cache("master_".$remember_me);
+            }
+        }
         if(!empty($master)){
             define("MASTER_ID",$master['id']);
         }else{

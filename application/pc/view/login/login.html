@@ -23,12 +23,12 @@
             <input type="password" name="password" lay-verify="required" placeholder="请输入秘钥" class="layui-input">
           </div>
         </div>
-        <!-- <div class="layui-form-item">
+        <div class="layui-form-item">
           <label class="layui-form-label">记住我</label>
           <div class="layui-input-block">
-            <input name="remember" type="checkbox" value="1">
+            <input name="remember_me" type="checkbox" value="1" {if cookie("remember_me")}checked{/if}>
           </div>
-        </div> -->
+        </div>
         <div class="layui-form-item">
           <div class="layui-input-block">
             <button type="submit" class="layui-btn" lay-submit>登录</button>

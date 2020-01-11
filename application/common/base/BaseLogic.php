@@ -5,9 +5,13 @@ use think\Request;
 class BaseLogic
 {
     protected $request;
-    const BASE_SELECT_WHERE=["is_delete"=>0,"master_id"=>MASTER_ID];
+
+    protected $base_select_where=["is_delete"=>0,"master_id"=>0];
     public function __construct(Request $request)
     {
+        if(defined("MASTER_ID")){
+            $this->base_select_where['master_id']=MASTER_ID;
+        }
         $this->request=$request;
     }
     /**

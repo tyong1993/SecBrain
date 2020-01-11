@@ -3,10 +3,11 @@ namespace app\common\logic;
 
 use Think\Db;
 use app\common\base\BaseLogic;
+use app\common\logic\CoreLogicInf;
 class MemoryLogic extends BaseLogic implements MemoryLogicInf
 {
     
-    public function addMemory()
+    public function addMemory(CoreLogicInf $coreLogicInf)
     {
         //title必填
         if(empty($this->request->param("title"))){
@@ -14,7 +15,7 @@ class MemoryLogic extends BaseLogic implements MemoryLogicInf
         }
         Db::startTrans();
         //core
-        $res=$this->addCore(app("app\common\logic\CoreLogicInf"));
+        $res=$coreLogicInf->addCore();
         if($res["flag"] === false){
             Db::rollback();
             return self::bad($res);
@@ -33,21 +34,21 @@ class MemoryLogic extends BaseLogic implements MemoryLogicInf
         Db::commit();
         return $memory_id;
     }
-    public function deleteMemory($id)
+    public function deleteMemory($id,CoreLogicInf $coreLogicInf)
     {
         $core_id=Db::table("memory")->where(["id"=>$id])->value("core_id");
         Db::startTrans();
-        $this->deleteCore($core_id,app("app\common\logic\CoreLogicInf"));
+        $coreLogicInf->deleteCore($core_id);
         //tag
         $this->updateMemoryTag($id,'');
         Db::commit();
         return self::well();
     }
-    public function updateMemory($id)
+    public function updateMemory($id,CoreLogicInf $coreLogicInf)
     {
         $core_id=Db::table("memory")->where(["id"=>$id])->value("core_id");
         Db::startTrans();
-        $this->updateCore($core_id,app("app\common\logic\CoreLogicInf"));
+        $coreLogicInf->updateCore($core_id);
         //memory
         $memory=[
             'id'=>$id,
@@ -64,7 +65,7 @@ class MemoryLogic extends BaseLogic implements MemoryLogicInf
     public function selectMemoryList()
     {
         $category_id=$this->request->param("category_id");
-        $where=self::BASE_SELECT_WHERE;
+        $where=$this->base_select_where;
         if(!empty($category_id)){
             $memory_ids=Db::table("memory_tag")->where(["category_id"=>$category_id])->column("memory_id");
             $memory_ids[]=0;
@@ -86,7 +87,7 @@ class MemoryLogic extends BaseLogic implements MemoryLogicInf
     }
     public function selectMemoryone($id)
     {
-        $where=self::BASE_SELECT_WHERE;
+        $where=$this->base_select_where;
         $where["m.id"]=$id;
         $res=Db::table("memory")
         ->alias("m")
@@ -95,18 +96,6 @@ class MemoryLogic extends BaseLogic implements MemoryLogicInf
         ->where($where)
         ->find();
         return $res;
-    }
-    protected function addCore(CoreLogicInf $coreLogic)
-    {
-        return $coreLogic->addCore();
-    }
-    protected function deleteCore($core_id,CoreLogicInf $coreLogic)
-    {
-        return $coreLogic->deleteCore($core_id);
-    }
-    protected function updateCore($core_id,CoreLogicInf $coreLogic)
-    {
-        return $coreLogic->updateCore($core_id);
     }
     protected function updateMemoryTag($memory_id,$category_ids)
     {

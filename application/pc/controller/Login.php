@@ -2,32 +2,24 @@
 namespace app\pc\controller;
 
 use app\common\base\BaseController;
+use app\common\logic\LoginLogicInf;
 class Login extends BaseController
 {
 
-    public function login()
+    public function login(LoginLogicInf $loginLogicInf)
     {
         if($this->request->isGet()){
             return $this->fetch();
         }
-        $name=$this->request->param("name");
-        $password=$this->request->param("password");
-        $remember=$this->request->param("remember");
-        if(empty($name) || empty($password)){
-            return $this->error("账号或密码错误");
+        $res=$loginLogicInf->login();
+        if($res['flag'] == false){
+            $this->error($res['msg']);
         }
-        $masters=db("master")->where(["name"=>$name])->select();
-        $password=md5(md5($password));
-        $master=null;
-        foreach($masters as $val){
-            if($val["password"] == $password){
-                $master=$val;break;
-            }
-        }
-        if($master==null){
-            return $this->error("账号或密码错误");
-        }
-        session('master', $master);
+        return redirect('/pc/memory/index');
+    }
+    public function logout(LoginLogicInf $loginLogicInf)
+    {
+        $res=$loginLogicInf->logout();
         return redirect('/pc/memory/index');
     }
 }
