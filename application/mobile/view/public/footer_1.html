@@ -29,7 +29,7 @@ padding: 0 10px 0 10px;" class="layui-row">
         <div style="margin-top: 10px;" id="memory_category">
             {if isset($memory_categorys)}
                 {foreach name="memory_categorys" item="val" }
-                    <button data-id="{$val['id']}" type="button" ondblclick="deleteMemoryCategory(this)" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">{$val['name']}</button>
+                    <button data-id="{$val['id']}" type="button" onclick="deleteMemoryCategory(this)" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius">{$val['name']}</button>
                 {/foreach}
             {/if}
         </div>
