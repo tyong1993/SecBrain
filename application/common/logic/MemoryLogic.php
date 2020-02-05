@@ -80,7 +80,7 @@ class MemoryLogic extends BaseLogic implements MemoryLogicInf
         ->order("id desc")
         ->select();
         foreach($res as &$val){
-            $val['update_time']=date("Y年m月d日 H:i");
+            $val['update_time']=date("Y年m月d日 H:i",$val['update_time']);
             // $val['describe']=mb_substr($val['describe'],0,10)."......";
         }
         return $res;
