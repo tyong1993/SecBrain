@@ -31,7 +31,7 @@
             <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
               <!-- 加载编辑器的容器 -->
-              <textarea style="height:500px;" name='content' id='container'>{$memory['content']|raw}</textarea style="height:500px;">
+              <textarea style="height:500px;" name='content' id='container'>{$memory['content']}</textarea style="height:500px;">
             </div>
           </div>
           <input type="text" name="categorys" style="display: none;">
@@ -76,7 +76,7 @@
   var ue = UE.getEditor('container');
   //对编辑器的操作最好在编辑器ready之后再做
   // ue.ready(function() {
-  //   ue.setContent("{$memory['content']}");
+  //   ue.setContent();
   // });
   var form=layui.form;
   var $=layui.jquery;
